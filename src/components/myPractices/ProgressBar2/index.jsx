@@ -7,14 +7,17 @@ export const ProgressBar2 = () => {
     const [now, setNow] = useState(0);
     const inputRef = useRef(null)
 
-    const handleProgress = () =>{clo
+    const handleProgress = () =>{
+        const valueInput = inputRef.current?.value
         const interval = setInterval(() => {
             setNow((now) => {
-                if(now === 30){
+                if(now === +valueInput)
+                {
                     clearInterval(interval)
                     return now
                 }
-            return now + 1})
+                return now + 1
+            })
         }, 500);
     }
 
@@ -27,10 +30,19 @@ export const ProgressBar2 = () => {
       <Card.Body>
         <Card.Title>You have {`${now}`} seconds to comply</Card.Title>
         <BarProgress animated now={now} label={`${now}%`} variant='danger'/>
-        <Form.Control placeholder='Cuanto aprendiste hoy de React?' className="my-3">
-            
+
+        <Form.Control 
+        ref={inputRef} 
+        placeholder='Cuanto aprendiste hoy de React?' 
+        className="my-3">
         </Form.Control>
-        <Button ref={inputRef} variant="primary" className="mb-3" onClick={handleProgress}>CHECK</Button>
+
+        <Button 
+        variant="primary" 
+        className="mb-3" 
+        onClick={handleProgress}>
+          CHECK</Button>
+          
       </Card.Body>
     </Card>
         </Col>
