@@ -2,7 +2,8 @@ import { isDisabled } from "@testing-library/user-event/dist/utils";
 import { useRef, useState } from "react";
 import { Button, Card, Col, Container, Row, ProgressBar as BarProgress, Form, Modal } from "react-bootstrap"
 import img from '../../../assets/maxresdefault.jpg'
-
+import { ProgressBar3 } from "../ProgressBar3";
+import './styles.css'
 export const ProgressBar2 = () => {
 
 
@@ -58,6 +59,8 @@ export const ProgressBar2 = () => {
               <Card.Title>You have {`${now}`} seconds to comply</Card.Title>
               <BarProgress animated now={now} label={`${now}%`} variant='danger' />
 
+              <ProgressBar3  now={now} label={`${now}%`} />
+
               <Form.Control
                 ref={inputRef}
                 placeholder='Cuanto aprendiste hoy de React?'
@@ -76,7 +79,7 @@ export const ProgressBar2 = () => {
                 variant="danger"
                 className="mb-3"
                 onClick={handleReset}>
-                Comply</Button>
+                COMPLY!!!!</Button>
 
             </Card.Body>
           </Card>
