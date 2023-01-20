@@ -1,6 +1,6 @@
 import { isDisabled } from "@testing-library/user-event/dist/utils";
 import { useRef, useState } from "react";
-import { Button, Card, Col, Container, Row, ProgressBar as BarProgress, Form } from "react-bootstrap"
+import { Button, Card, Col, Container, Row, ProgressBar as BarProgress, Form, Modal } from "react-bootstrap"
 import img from '../../../assets/maxresdefault.jpg'
 
 export const ProgressBar2 = () => {
@@ -10,10 +10,20 @@ export const ProgressBar2 = () => {
   const [intervalState, setIntervalState] = useState(null);
   const inputRef = useRef(null);
   const [btnDisable, setBtnDisable] = useState(true)
+  const[showModal, setShowModal] = useState(false)
 
   const handleProgress = () => {
     const valueInput = +inputRef.current?.value
-    let interval = setInterval(() => {
+    const isValueValid = !isNaN(valueInput) && valueInput > 0 && valueInput <= 100
+    setShowModal(!isValueValid)
+
+    if(intervalState){
+      handleReset()
+    }
+
+    if(isValueValid) {
+
+    const interval = setInterval(() => {
       setNow((now) => {
         if (now === valueInput) {
           clearInterval(interval);
@@ -23,8 +33,10 @@ export const ProgressBar2 = () => {
       })
     }, 500);
     setIntervalState(interval);
+  }else{
+    handleReset()
   }
-
+};
 
   const handleReset = () => {
     clearInterval(intervalState);
@@ -35,6 +47,7 @@ export const ProgressBar2 = () => {
     setBtnDisable(!!!+value)
   } 
 
+  const handleClose =() =>{setShowModal(false)}
   return (
     <Container>
       <Row className="mt-5">
@@ -68,6 +81,20 @@ export const ProgressBar2 = () => {
             </Card.Body>
           </Card>
         </Col>
+        <Modal show={showModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <>
+            <h2 className="text-danger text-center py-4">ERROR.. ❌</h2>
+            <p className="text-muted fs-4 text-center">
+              Solo se acepta valores numéricos. El valor debe ser mayor a 0 y
+              menor e igual a 100.
+            </p>
+          </>
+        </Modal.Body>
+      </Modal>
       </Row>
     </Container>
   )
