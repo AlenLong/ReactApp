@@ -14,18 +14,22 @@ export const Header = () => {
               Home
             </Nav.Link>
             <NavDropdown title="Practicas en clase" id="basic-nav-dropdown">
+
               <NavDropdown.Item as={Link} to="/showHideMessage">
                 Show / Hide Message
               </NavDropdown.Item>
               <NavDropdown.Divider />
+
               <NavDropdown.Item as={Link} to="/stopwatchTimer">
                 Stopwatch / Timer
               </NavDropdown.Item>
               <NavDropdown.Divider />
+
               <NavDropdown.Item as={Link} to="/progressBar">
                 Progress Bar
               </NavDropdown.Item>
               <NavDropdown.Divider />
+
               <NavDropdown.Item as={Link} to="/">
                 Task Manager
               </NavDropdown.Item>
@@ -53,7 +57,12 @@ export const Header = () => {
               <NavDropdown.Divider />
 
               <NavDropdown.Item as={Link} to="/myPractice/progressBar2">
-              Mi Practica | Progress Bar 2
+              Mi Practica | Progress Bar
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+
+              <NavDropdown.Item as={Link} to="/myPractice/StopwatchTimer2">
+              Mi Practica | Stopwatch \ Timer
               </NavDropdown.Item>
               <NavDropdown.Divider />
 

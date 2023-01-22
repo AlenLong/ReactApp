@@ -69,7 +69,7 @@ export const ProgressBar2 = () => {
               </Form.Control>
 
               <Button
-                variant="warning"
+                variant="secondary"
                 className="mb-3 mx-4"
                 onClick={handleProgress}
                 disabled={btnDisable}>

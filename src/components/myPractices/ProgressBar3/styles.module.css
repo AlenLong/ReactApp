@@ -6,13 +6,13 @@
     display: flex;
     align-items: center;
     border-radius: 5px;
-    background-color: rgb(243, 151, 2);
+    background-color: rgb(176, 176, 176);
     color:#fff;
     text-align: center;
     overflow: hidden;
 }
 .bar{
-    background-color:rgb(226, 0, 0);
+    background-color:rgb(226, 132, 0);
     height: 20px;
     border-radius: 3px;
     transition: width 800ms ease-in-out;
