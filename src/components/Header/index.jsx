@@ -66,6 +66,11 @@ export const Header = () => {
               </NavDropdown.Item>
               <NavDropdown.Divider />
 
+              <NavDropdown.Item as={Link} to="/myPractice/taskManager2">
+              Mi Practica | Task Manager 2
+              </NavDropdown.Item>
+              <NavDropdown.Divider />
+
 
               <NavDropdown.Item as={Link} to="/">
                 ...
