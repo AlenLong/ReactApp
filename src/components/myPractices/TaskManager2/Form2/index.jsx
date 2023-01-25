@@ -25,9 +25,9 @@ export const Form2 = ({ onChange, inputValues, onSubmit, refForm}) => {
             <Form.Group className="mb-3">
                 <Form.Label>Descripción</Form.Label>
                 <Form.Control 
-                as={'textarea'} 
                 type="text" 
-                value={inputValues.description} 
+                as={'textarea'} 
+                /* value={inputValues.description} */ 
                 placeholder="Ingresa una descripción" 
                 onChange={onChange} 
                 name='description' 
