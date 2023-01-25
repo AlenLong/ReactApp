@@ -21,10 +21,24 @@ switch (action.type) {
     }
 
     /* console.log('PAYLOAD',newTask); */
-    return [...state, newTask]
+      return [...state, newTask]
+
+    case 'UPDATE':
+      const taskToUpdate = action.payload
+      const tasksUpdated = state.map((task) =>{
+        if(task.id === taskToUpdate.id){
+          return{
+            ...task,
+            ...taskToUpdate
+          }
+        }
+        return task
+      })
+      return tasksUpdated
+
 
   default:
-    break;
+    return state
 }
 
 
@@ -33,17 +47,29 @@ switch (action.type) {
 export const TaskManager2 = () => {
   const refForm = useRef(null)
   const [inputValues, setInputValues, handleChangeInputValue, reset] = useForm2({}, refForm)
-
-const [tasks, dispatch] = useReducer(taskReducer,[])   // dispatch({type,payload})
+  const [action, setAction] = useState('CREATE')
+  const [tasks, dispatch] = useReducer(taskReducer,[])   // dispatch({type,payload})
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    dispatch({type:'ADD', payload:inputValues})
-    
+    if(action === 'CREATE'){
+      dispatch({type:'ADD', payload:inputValues})
+    }
+
+    if(action === 'UPDATE'){
+      dispatch({type:'UPDATE', payload:inputValues})
+    }
+
     reset()
   }
 
+  const handleUpdate = (id) => {
+    console.log('Quiero actualizar la tarea' + id);
+    const taskFound = tasks.find(task => task.id ===id)
+    setInputValues(taskFound)
+    setAction('UPDATE')
+  }
 
   return (
     <Container>
@@ -55,13 +81,16 @@ const [tasks, dispatch] = useReducer(taskReducer,[])   // dispatch({type,payload
             inputValues={inputValues}
             onSubmit={handleSubmit}
             refForm={refForm}
+            action={action}
           />
 
         </Col>
         <Col xs={12} lg={8} className={'text-center'}>
           {
             tasks.map((taskMap) =>{
-              return <CardItem key={taskMap.id} task={taskMap} />
+              return (
+                <CardItem key={taskMap.id} task={taskMap} onUpdate={handleUpdate}/>
+              )
             })
           }
 

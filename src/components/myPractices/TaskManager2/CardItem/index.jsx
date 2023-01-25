@@ -1,6 +1,6 @@
 import { Button, Form, Toast, Image } from "react-bootstrap"
 
-export const CardItem = ({task}) => {
+export const CardItem = ({task, onUpdate}) => {
     return (
         <Toast>
             <Toast.Header>
@@ -23,7 +23,7 @@ export const CardItem = ({task}) => {
                     <Form.Label htmlFor="completed">Compeltado</Form.Label>
                 </Form.Group>
 
-                <Button variant="outline-primary">Editar</Button>
+                <Button variant="outline-primary" onClick={() => onUpdate(task.id)}>Editar</Button>
 
             </Toast.Body>
 
