@@ -1,12 +1,12 @@
 import { Button, Form, Toast, Image } from "react-bootstrap"
 
-export const CardItem = ({task, onUpdate}) => {
+export const CardItem = ({task, onUpdate, onDelete}) => {
     return (
-        <Toast>
+        <Toast onClose={()=>onDelete(task.id)}>
             <Toast.Header>
                 <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
                 <strong className="me-auto">{task.title}</strong>
-                <small>11 mins ago</small>
+                <small>{task.date}</small>
             </Toast.Header>
             <Toast.Body>
                 <Image fluid src={task.img}/> {/* https://wpdirecto.com/wp-content/uploads/2017/08/alt-de-una-imagen.png */}

@@ -10,14 +10,19 @@ const generateId = () => Math.random().toString(36).substring(2,18)
 
 
 const taskReducer = (state, action) => {  //{type, payload} type = tipo de accionm payload la info
+
+
 switch (action.type) {
+
   case 'ADD':
 
+    const inputValues = action.payload
     const newTask = {
-      ...action.payload,
+      ...inputValues,
       id: generateId(),
       active: false,
-      completed: false
+      completed: false,
+      date: new Date().toLocaleString()
     }
 
     /* console.log('PAYLOAD',newTask); */
@@ -37,6 +42,12 @@ switch (action.type) {
       return tasksUpdated
 
 
+      case 'DELETE':
+        const idTaskToDelete = action.payload
+        const restTask = state.filter(task => task.id !== idTaskToDelete)
+      return restTask
+
+
   default:
     return state
 }
@@ -45,8 +56,17 @@ switch (action.type) {
 }
 
 export const TaskManager2 = () => {
+  const formTaskInitialState = {
+    id:'id',
+    title:'',
+    description:'',
+    img:'',
+    active:false,
+    completed:false,
+    date:''
+  }
   const refForm = useRef(null)
-  const [inputValues, setInputValues, handleChangeInputValue, reset] = useForm2({}, refForm)
+  const [inputValues, setInputValues, handleChangeInputValue, reset] = useForm2(formTaskInitialState, refForm)
   const [action, setAction] = useState('CREATE')
   const [tasks, dispatch] = useReducer(taskReducer,[])   // dispatch({type,payload})
 
@@ -62,6 +82,7 @@ export const TaskManager2 = () => {
     }
 
     reset()
+    setAction('CREATE')
   }
 
   const handleUpdate = (id) => {
@@ -70,6 +91,14 @@ export const TaskManager2 = () => {
     setInputValues(taskFound)
     setAction('UPDATE')
   }
+
+  const handleDelete = (id) =>{
+    dispatch({type:"DELETE", payload:id})
+  }
+
+
+
+
 
   return (
     <Container>
@@ -89,7 +118,11 @@ export const TaskManager2 = () => {
           {
             tasks.map((taskMap) =>{
               return (
-                <CardItem key={taskMap.id} task={taskMap} onUpdate={handleUpdate}/>
+                <CardItem 
+                key={taskMap.id} 
+                task={taskMap} 
+                onUpdate={handleUpdate} 
+                onDelete={handleDelete}/>
               )
             })
           }
