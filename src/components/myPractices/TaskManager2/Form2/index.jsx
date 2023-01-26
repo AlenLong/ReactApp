@@ -1,7 +1,7 @@
-import React from 'react'
-import { Button, Form } from 'react-bootstrap'
+import { Button, Form, Image } from 'react-bootstrap'
+import classes  from "./style.module.css";
 
-export const Form2 = ({ onChange, inputValues, onSubmit, refForm, action}) => {
+export const Form2 = ({ onChange, inputValues, onSubmit, refForm, action, onReset}) => {
     return (
         <Form onSubmit={onSubmit} ref={refForm}>
             <Form.Group className="mb-3">
@@ -14,6 +14,9 @@ export const Form2 = ({ onChange, inputValues, onSubmit, refForm, action}) => {
             </Form.Group>
 
             <Form.Group className="mb-3">
+
+                <Image className={classes.imgPreview}  fluid src={inputValues.img}/> 
+
                 <Form.Label>Imagen</Form.Label>
                 <Form.Control 
                 type="text" 
@@ -38,8 +41,8 @@ export const Form2 = ({ onChange, inputValues, onSubmit, refForm, action}) => {
                 {action === 'CREATE' ? 'Crear' : 'Actualizar'}
             </Button>
 
-            <Button variant="danger" type="reset">
-                Reiniciar
+            <Button variant="danger" type="reset" onClick={onReset}>
+                {action === "CREATE" ? 'Reiniciar' : 'Cancelar'}
             </Button>
         </Form>
     )

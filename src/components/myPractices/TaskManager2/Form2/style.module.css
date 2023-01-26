@@ -1,0 +1,8 @@
+.imgPreview{
+    height: 100px;
+    object-fit: contain;
+}
+
+.toast{
+    width: 300px;
+}

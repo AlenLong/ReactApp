@@ -2,95 +2,42 @@ import { useEffect, useReducer } from 'react'
 import { useRef, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useForm2 } from '../../../hook/useForm2'
+import { taskReducer } from '../../../reducers/taskReducer'
 import { CardItem } from './CardItem'
 import { Form2 } from './Form2'
+import { TaskFilter } from './TaskFilter'
+import { filterTask } from '../../../constants'
 
 
-const generateId = () => Math.random().toString(36).substring(2,18)
-
-
-const taskReducer = (state, action) => {  //{type, payload} type = tipo de accionm payload la info
-
-
-switch (action.type) {
-
-  case 'ADD':
-
-    const inputValues = action.payload
-    const newTask = {
-      ...inputValues,
-      id: generateId(),
-      active: false,
-      completed: false,
-      date: new Date().toLocaleString()
-    }
-
-    /* console.log('PAYLOAD',newTask); */
-      return [...state, newTask]
-
-    case 'UPDATE':
-      const taskToUpdate = action.payload
-      const tasksUpdated = state.map((task) =>{
-        if(task.id === taskToUpdate.id){
-          return{
-            ...task,
-            ...taskToUpdate
-          }
-        }
-        return task
-      })
-      return tasksUpdated
-
-
-      case 'DELETE':
-        const idTaskToDelete = action.payload
-        const restTask = state.filter(task => task.id !== idTaskToDelete)
-      return restTask
-
-      case 'TOGGLE_ACTIVE' :
-        const  taskTpActive = action.payload
-        const tasksUpdatedActive = state.map(task =>{
-          if(task.id === action.payload){
-            return {
-              ...task,
-              active: !task.active
-            }
-          }
-          return task
-        })
-        return tasksUpdatedActive
-
-  default:
-    return state
-}
-
-
-}
 
 export const TaskManager2 = () => {
   const formTaskInitialState = {
-    id:'id',
-    title:'',
-    description:'',
-    img:'',
-    active:false,
-    completed:false,
-    date:''
+    id: 'id',
+    title: '',
+    description: '',
+    img: '',
+    active: false,
+    completed: false,
+    date: ''
   }
   const refForm = useRef(null)
   const [inputValues, setInputValues, handleChangeInputValue, reset] = useForm2(formTaskInitialState, refForm)
   const [action, setAction] = useState('CREATE')
-  const [tasks, dispatch] = useReducer(taskReducer,[])   // dispatch({type,payload})
+  const [statusFilter, setStatusFilter] = useState(filterTask.ALL)
+
+  const taskStore = localStorage.getItem('tasks')
+  const initialStateReducer = JSON.parse(taskStore) || []
+  const [tasks, dispatch] = useReducer(taskReducer, initialStateReducer)   // dispatch({type,payload})
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    if(action === 'CREATE'){
-      dispatch({type:'ADD', payload:inputValues})
+    if (action === 'CREATE') {
+      dispatch({ type: 'ADD', payload: inputValues })
     }
 
-    if(action === 'UPDATE'){
-      dispatch({type:'UPDATE', payload:inputValues})
+    if (action === 'UPDATE') {
+      dispatch({ type: 'UPDATE', payload: inputValues })
     }
 
     reset()
@@ -98,30 +45,64 @@ export const TaskManager2 = () => {
   }
 
   useEffect(() => {
-     console.log(tasks);
+    console.log(tasks);
+    localStorage.setItem('tasks', JSON.stringify(tasks))
   }, [tasks])
 
   const handleUpdate = (id) => {
     console.log('Quiero actualizar la tarea' + id);
-    const taskFound = tasks.find(task => task.id ===id)
+    const taskFound = tasks.find(task => task.id === id)
     setInputValues(taskFound)
     setAction('UPDATE')
   }
 
-  const handleDelete = (id) =>{
-    dispatch({type:"DELETE", payload:id})
+  const handleDelete = (id) => {
+    dispatch({ type: "DELETE", payload: id })
   }
- 
 
-const handleTaskActive = (id) => {
-  dispatch({type:"TOGGLE_ACTIVE", payload:id})
-}
+
+  const handleTaskActive = (id) => {
+    dispatch({ type: "TOGGLE_ACTIVE", payload: id })
+  }
+  const handleTaskCompleted = (id) => {
+    dispatch({ type: "TOGGLE_COMPLETE", payload: id })
+  }
+
+  const handleReset = () => {
+    reset()
+  }
+
+  const handleStatusFilter = (status='') =>{
+    setStatusFilter(status)
+  }
+
+  const filterTaskMethod = task => {
+
+    switch (statusFilter) {
+      case filterTask.PROCESS:
+        return task.active === true;
+
+      case filterTask.PENDING:
+        return task.active === false;
+      
+      case filterTask.COMPLETED:
+        return task.completed === true;
+      default:
+        return task
+    }
+
+  }
+
+
 
 
   return (
     <Container>
       <Row className="mt-5">
-        <Col xs={12} lg={4} className={'text-center'}>
+        <Col xs={12} lg={{span:6,offset:4}} className={'text-center mb-5'}>
+          <TaskFilter onChangeFilter={handleStatusFilter}/>
+        </Col>
+        <Col xs={12} lg={3} className={'text-center mb-5'}>
 
           <Form2
             onChange={handleChangeInputValue}
@@ -129,19 +110,21 @@ const handleTaskActive = (id) => {
             onSubmit={handleSubmit}
             refForm={refForm}
             action={action}
+            onReset={handleReset}
           />
 
         </Col>
-        <Col xs={12} lg={8} className={'text-center'}>
+        <Col xs={12} lg={9} className={'d-flex flex-wrap align-items-start gap-2'}>
           {
-            tasks.map((taskMap) =>{
+            tasks.filter(filterTaskMethod).map((taskMap) => {
               return (
-                <CardItem 
-                key={taskMap.id} 
-                task={taskMap} 
-                onUpdate={handleUpdate} 
-                onDelete={handleDelete}
-                onActive={handleTaskActive}/>
+                <CardItem
+                  key={taskMap.id}
+                  task={taskMap}
+                  onUpdate={handleUpdate}
+                  onDelete={handleDelete}
+                  onActive={handleTaskActive}
+                  onCompleted={handleTaskCompleted} />
               )
             })
           }
