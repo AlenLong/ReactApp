@@ -1,8 +1,8 @@
 import { Button, Form, Toast, Image } from "react-bootstrap"
 
-export const CardItem = ({task, onUpdate, onDelete}) => {
+export const CardItem = ({task, onUpdate, onDelete, onActive}) => {
     return (
-        <Toast onClose={()=>onDelete(task.id)}>
+        <Toast onClose={()=>onDelete(task.id)} bg={task.active ? 'success' : null}>
             <Toast.Header>
                 <img src="holder.js/20x20?text=%20" className="rounded me-2" alt="" />
                 <strong className="me-auto">{task.title}</strong>
@@ -14,8 +14,8 @@ export const CardItem = ({task, onUpdate, onDelete}) => {
                 <p className="pt-2">{task.description}</p>
 
                 <Form.Group className="mb-3 d-flex gap-1">
-                    <Form.Check name="active" id="active" />
-                    <Form.Label htmlFor="active">Pendiente</Form.Label>
+                    <Form.Check name="active" id={task.id} onClick={()=>onActive(task.id)} />
+                    <Form.Label htmlFor={task.id}>Pendiente</Form.Label>
                 </Form.Group>
 
                 <Form.Group className="mb-3 d-flex gap-1">

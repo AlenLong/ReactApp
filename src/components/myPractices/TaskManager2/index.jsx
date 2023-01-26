@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import { useRef, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
 import { useForm2 } from '../../../hook/useForm2'
@@ -47,6 +47,18 @@ switch (action.type) {
         const restTask = state.filter(task => task.id !== idTaskToDelete)
       return restTask
 
+      case 'TOGGLE_ACTIVE' :
+        const  taskTpActive = action.payload
+        const tasksUpdatedActive = state.map(task =>{
+          if(task.id === action.payload){
+            return {
+              ...task,
+              active: !task.active
+            }
+          }
+          return task
+        })
+        return tasksUpdatedActive
 
   default:
     return state
@@ -85,6 +97,10 @@ export const TaskManager2 = () => {
     setAction('CREATE')
   }
 
+  useEffect(() => {
+     console.log(tasks);
+  }, [tasks])
+
   const handleUpdate = (id) => {
     console.log('Quiero actualizar la tarea' + id);
     const taskFound = tasks.find(task => task.id ===id)
@@ -95,9 +111,11 @@ export const TaskManager2 = () => {
   const handleDelete = (id) =>{
     dispatch({type:"DELETE", payload:id})
   }
+ 
 
-
-
+const handleTaskActive = (id) => {
+  dispatch({type:"TOGGLE_ACTIVE", payload:id})
+}
 
 
   return (
@@ -122,7 +140,8 @@ export const TaskManager2 = () => {
                 key={taskMap.id} 
                 task={taskMap} 
                 onUpdate={handleUpdate} 
-                onDelete={handleDelete}/>
+                onDelete={handleDelete}
+                onActive={handleTaskActive}/>
               )
             })
           }
